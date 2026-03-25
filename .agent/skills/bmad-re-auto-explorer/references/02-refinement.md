@@ -16,16 +16,16 @@ Based on the initial ingestion, analyze the project structure and refine the res
 2.  **Scan for Next Task**: Open `{re_exploration_plan}` and search for the **next unchecked item** (`- [ ]`) **exclusively in Step 1 (or Section 1)**. If all items in Step 1 are checked (`[x]`), jump to the **Analyze Structure** stage.
 
 3.  **Analyze Purpose**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Define the primary business purpose and domain of the product." {output_dir}/project_brief.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Определи основное назначение и предметную область продукта" {output_dir}/project_brief.md`
 
 4.  **Analyze Structure**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Map the top-level file structure (tree -L3) - Physical structure of the project, " {output_dir}/project_tree.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Выведи дерево файлов проекта с глубиной 3 уровня" {output_dir}/project_tree.md`
 
 5.  **Analyze Tech Stack**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Determine the technology stack (languages, frameworks, dependencies) - Technology matrix" {output_dir}/project_tech_stack.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Выведи таблицу структурных пакетов, их предназначение и основные функции" {output_dir}/project_tech_stack.md`
 
 6.  **Analyze Project Type**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Determine the type of the project (monolith / microservices / library / CLI / SaaS and etc.) - Project type" {output_dir}/project_type.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Опиши точку входа, принцип основных сценариев работы" {output_dir}/project_type.md`
 
 7.  **Read and Cache**:
     - Read the `{output_dir}/project_brief.md` file summarize it and update the `re-report.md` file under `Step 1 Project overview with heading#### 1.1 Project Brief`.
@@ -57,16 +57,16 @@ Based on the initial ingestion, analyze the project structure and refine the res
       - **Requirement**: For each item marked `[x]`, provide a 1-sentence justification based on your analysis of the `re-report.md`.
       - **Checklist**:
         ```text
-        - [ ] **Core / Domain Layer** — business logic
-        - [ ] **API / Interface Layer** — REST / gRPC / GraphQL / CLI
-        - [ ] **Storage / Persistence** — ORM, DB schema, migrations
-        - [ ] **Messaging / Events** — queues, pub-sub, event sourcing
-        - [ ] **Auth / AuthZ** — authentication, authorization, roles
-        - [ ] **Caching** — caching strategy, TTL, invalidation
-        - [ ] **Observability** — logging, metrics, tracing
-        - [ ] **Configuration Management** — config, secrets, environments
-        - [ ] **Background Jobs / Schedulers**
-        - [ ] **External Integrations** — third-party APIs, SDKs
+        - [ ] **Core / Domain Layer** — business logic, с примерами кода
+        - [ ] **API / Interface Layer** — REST / gRPC / GraphQL / CLI, с примерами кода
+        - [ ] **Storage / Persistence** — ORM, DB schema, migrations, с примерами кода
+        - [ ] **Messaging / Events** — queues, pub-sub, event sourcing, с примерами кода
+        - [ ] **Auth / AuthZ** — authentication, authorization, roles, с примерами кода
+        - [ ] **Caching** — caching strategy, TTL, invalidation, с примерами кода
+        - [ ] **Observability** — logging, metrics, tracing, с примерами кода
+        - [ ] **Configuration Management** — config, secrets, environments, с примерами кода
+        - [ ] **Background Jobs / Schedulers**, с примерами кода
+        - [ ] **External Integrations** — third-party APIs, SDKs, с примерами кода
         ```
     - **Phase 2: Wait & Confirm**:
       - **STOP EXECUTION**. The agent MUST wait for the user to confirm the list or provide modifications.
@@ -77,8 +77,8 @@ Based on the initial ingestion, analyze the project structure and refine the res
       ```markdown
       ### {Subsystem Name}
 
-      - [ ] {Subsystem Name} Purpose: What business problem does it solve? Internal structure: Classes, functions, modules and their relations. Dependencies: What does it depend on? Who depends on it?
-      - [ ] {Subsystem Name} Key algorithms: Describe non-trivial algorithms / patterns. Public API: What interfaces does it export? Invariants: Contracts, preconditions, postconditions. Configuration: Parameters, environment variables, defaults. Extension points: Plugin points, hooks, abstract interfaces.
+      - [ ] {Subsystem Name} Какую бизнес-задачу решает? Внутренняя структура: классы, функции, модули и их взаимосвязи, поведение. Оформи таблицу, диаграммы?
+      - [ ] {Subsystem Name} Жизненный цикл, Конфигурация: параметры, переменные окружения, значения по умолчанию. Каналы взаимодействия, основные партнеры, выведи таблицы, диаграммы.
       ```
 
 12. **Dialogue: Core Features Selection (MANDATORY)**:

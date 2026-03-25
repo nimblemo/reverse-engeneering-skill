@@ -1,5 +1,5 @@
 communication_language: Russian
-document_output_language: English
+document_output_language: Russian
 projects:
   - re_repo_url: "https://github.com/getzep/graphiti"
     re_project_name: "graphiti"
@@ -11,5 +11,5 @@ projects:
     re_max_sources: 50
   - re_repo_url: "https://github.com/zavora-ai/adk-rust"
     re_project_name: "adk-rust"
-    re_base_plan: "{project-root}/research-plan.md"
+    re_base_plan: "{project-root}/fast-research.md"
     re_max_sources: 50
