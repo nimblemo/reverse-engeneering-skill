@@ -174,23 +174,23 @@ C4Container
 ```mermaid
 flowchart TD
     ExtApp(["External Application"])
-    VMCore["VM (runLibraryFunction)"]
+    VMCore["VM - runLibraryFunction"]
     GraphInst["Graph Instance"]
-    CtxInst[/"Context (State)"/]
-    NodeInst["AbstractNode (execute)"]
+    CtxInst[/"Context - State"/]
+    NodeInst["AbstractNode - execute"]
 
-    ExtApp -- "1. ID библиотеки, ID функции, Входные данные (Inputs)" --> VMCore
-    VMCore -- "2. Структура графа (JSON)" --> GraphInst
+    ExtApp -- "1. ID библиотеки, ID функции, Входные данные Inputs" --> VMCore
+    VMCore -- "2. Структура графа JSON" --> GraphInst
     GraphInst -- "3. Создание изолированного контекста" --> CtxInst
     GraphInst -- "4. Передача внешних Inputs" --> CtxInst
 
     subgraph Execution Loop
         GraphInst -- "5. Запрос следующего NodeID" --> NodeInst
-        NodeInst -- "6. Чтение выходов предыдущих узлов (getOutput)" --> CtxInst
+        NodeInst -- "6. Чтение выходов предыдущих узлов getOutput" --> CtxInst
         CtxInst -- "Возврат значений" --> NodeInst
         NodeInst -- "7. Выполнение логики узла" --> NodeInst
-        NodeInst -- "8. Запись результатов узла (setOutput)" --> CtxInst
-        NodeInst -- "9. Возврат имени слота (напр. 'result', 'ifTrue')" --> GraphInst
+        NodeInst -- "8. Запись результатов узла setOutput" --> CtxInst
+        NodeInst -- "9. Возврат имени слота" --> GraphInst
         GraphInst -- "10. Поиск следующего NodeID по связям слота" --> GraphInst
     end
 
@@ -319,8 +319,8 @@ sequenceDiagram
       NodeExec("4. Node.execute")
       GraphRout("5. Маршрутизация - Graph while loop")
 
-      CtxInputs["(Context: Inputs & Variables)"]
-      CtxOutputs["(Context: Node Outputs)"]
+      CtxInputs["Context: Inputs & Variables"]
+      CtxOutputs["Context: Node Outputs"]
 
       Inputs --> VMCore
       VMCore -->|Структура графа| GraphInit
