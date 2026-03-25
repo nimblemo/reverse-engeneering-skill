@@ -16,7 +16,7 @@ Autonomous dive into the codebase.
 
 2.  **Scan for Next Task**: Open `{exploration-plan}` and search for the **next unchecked item** (`- [ ]`) in the **entire file**. If all items are checked (`[x]`), jump to the **Progression** stage.
 
-3.  **Sync Structure (CRITICAL)**: Ensure that `{re_report}` contains the same hierarchical structure as `{exploration-plan}`. If the current item is under headings (e.g., `###`, `####`, `#####`) that are not yet in `{re_report}`, append those headers to `{re_report}` in the exact order and with the exact numbering and text found in `{exploration-plan}`. This ensures the output maintains a consistent logical skeleton.
+3.  **Process Section Header**: If the next unchecked item belongs to a new section (e.g., `### Step 3: System Architecture`) that hasn't been added to `{re_report}` yet, append that section heading to `{re_report}`.
 
 4.  **Execute Deep Query**:
     - Define a `query` based on the text of the current item.
