@@ -1,0 +1,11 @@
+communication_language: Russian
+document_output_language: English
+projects:
+  - re_repo_url: "https://github.com/getzep/graphiti"
+    re_project_name: "graphiti"
+    re_base_plan: "{project-root}/research-plan.md"
+    re_max_sources: 50
+  - re_repo_url: "https://github.com/muqsitnawaz/swarmify"
+    re_project_name: "swarmify"
+    re_base_plan: "{project-root}/research-plan.md"
+    re_max_sources: 50
