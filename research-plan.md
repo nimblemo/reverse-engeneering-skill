@@ -2,6 +2,15 @@
 
 ### Step 1 Project overview
 
+<!-- Pre research - this question use skiil under the hood-->
+
+<!-- 
+- Identify the main purpose and domain of the product
+- Output the project file tree with a depth of 3 levels
+- Output a table of structural packages, their purpose, and main functions
+- Describe the entry point and the principle of main operating scenarios
+-->
+
 ### Step 2 System Architecture investigation
 
 - [ ] Define domain boundaries (DDD Bounded Contexts, if applicable)

@@ -22,7 +22,7 @@
     - `re_base_plan`: Path to the base research plan (default: `{project-root}/research-plan.md`).
     - `re_max_sources`: Maximum number of sources to import (default: 45).
 
-2.  **Preprocessing**: Run `scripts/preprocess.py` using `uv run --with gitpython` with arguments:
+2.  **Preprocessing**: Run `uv run --with gitpython scripts/preprocess.py` with arguments:
 
     ```bash
         prep --repo_url {re_repo_url} --json --output_dir {re_sources_folder} --max_sources {re_max_sources}

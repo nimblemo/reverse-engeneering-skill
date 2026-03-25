@@ -16,21 +16,22 @@ Based on the initial ingestion, analyze the project structure and refine the res
 2.  **Scan for Next Task**: Open `{re_exploration_plan}` and search for the **next unchecked item** (`- [ ]`) **exclusively in Step 1 (or Section 1)**. If all items in Step 1 are checked (`[x]`), jump to the **Analyze Structure** stage.
 
 3.  **Analyze Purpose**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Определи основное назначение и предметную область продукта" {output_dir}/project_brief.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Identify the main purpose and domain of the product" {output_dir}/project_brief.md`
 
 4.  **Analyze Structure**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Выведи дерево файлов проекта с глубиной 3 уровня" {output_dir}/project_tree.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Output the project file tree with a depth of 3 levels" {output_dir}/project_tree.md`
 
 5.  **Analyze Tech Stack**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Выведи таблицу структурных пакетов, их предназначение и основные функции" {output_dir}/project_tech_stack.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Output a table of structural packages, their purpose, and main functions" {output_dir}/project_tech_stack.md`
 
 6.  **Analyze Project Type**: Run command:
-    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Опиши точку входа, принцип основных сценариев работы" {output_dir}/project_type.md`
+    `uv run --with gitpython scripts/preprocess.py query {nb_id} "Describe the entry point and the principle of main operating scenarios" {output_dir}/project_type.md`
 
 7.  **Read and Cache**:
-    - Read the `{output_dir}/project_brief.md` file summarize it and update the `re-report.md` file under `Step 1 Project overview with heading#### 1.1 Project Brief`.
-8.  **Read and Cache**
-    - Read the `{output_dir}/project_tree.md` file and update the `re-report.md` file under Step 1 Project overview with heading `#### 1.2 Project Structure`. With format like example:
+    - Read the `{output_dir}/project_brief.md` file, summarize it, and update the `re-report.md` file under `Step 1 Project overview` with heading `#### 1.1 Project Brief`.
+
+8.  **Read and Cache**:
+    - Read the `{output_dir}/project_tree.md` file and update the `re-report.md` file under `Step 1 Project overview` with heading `#### 1.2 Project Structure`. Use the following format as an example:
 
     ```text
         project-root/
@@ -44,9 +45,9 @@ Based on the initial ingestion, analyze the project structure and refine the res
         └── requirements.txt
     ```
 
-9.  **Read and Cache**
-    - Read the `{output_dir}/project_tech_stack.md` file and update the `re-report.md` file under Step 1 Project overview with heading `#### 1.3 Technology Stack`. Prefer table format. Short description for each important technology.
-    - Read the `{output_dir}/project_type.md` file and update the `re-report.md` file under Step 1 Project overview with heading `#### 1.4 Project Type`.
+9.  **Read and Cache**:
+    - Read the `{output_dir}/project_tech_stack.md` file and update the `re-report.md` file under `Step 1 Project overview` with heading `#### 1.3 Technology Stack`. Prefer table format. Provide a short description for each important technology.
+    - Read the `{output_dir}/project_type.md` file and update the `re-report.md` file under `Step 1 Project overview` with heading `#### 1.4 Project Type`.
 
 10. **Create plan**: Copy `{base_plan}` to `{output_dir}/exploration-plan.md`
 
@@ -57,16 +58,16 @@ Based on the initial ingestion, analyze the project structure and refine the res
       - **Requirement**: For each item marked `[x]`, provide a 1-sentence justification based on your analysis of the `re-report.md`.
       - **Checklist**:
         ```text
-        - [ ] **Core / Domain Layer** — business logic, с примерами кода
-        - [ ] **API / Interface Layer** — REST / gRPC / GraphQL / CLI, с примерами кода
-        - [ ] **Storage / Persistence** — ORM, DB schema, migrations, с примерами кода
-        - [ ] **Messaging / Events** — queues, pub-sub, event sourcing, с примерами кода
-        - [ ] **Auth / AuthZ** — authentication, authorization, roles, с примерами кода
-        - [ ] **Caching** — caching strategy, TTL, invalidation, с примерами кода
-        - [ ] **Observability** — logging, metrics, tracing, с примерами кода
-        - [ ] **Configuration Management** — config, secrets, environments, с примерами кода
-        - [ ] **Background Jobs / Schedulers**, с примерами кода
-        - [ ] **External Integrations** — third-party APIs, SDKs, с примерами кода
+        - [ ] **Core / Domain Layer** — business logic, with code examples
+        - [ ] **API / Interface Layer** — REST / gRPC / GraphQL / CLI, with code examples
+        - [ ] **Storage / Persistence** — ORM, DB schema, migrations, with code examples
+        - [ ] **Messaging / Events** — queues, pub-sub, event sourcing, with code examples
+        - [ ] **Auth / AuthZ** — authentication, authorization, roles, with code examples
+        - [ ] **Caching** — caching strategy, TTL, invalidation, with code examples
+        - [ ] **Observability** — logging, metrics, tracing, with code examples
+        - [ ] **Configuration Management** — config, secrets, environments, with code examples
+        - [ ] **Background Jobs / Schedulers**, with code examples
+        - [ ] **External Integrations** — third-party APIs, SDKs, with code examples
         ```
     - **Phase 2: Wait & Confirm**:
       - **STOP EXECUTION**. The agent MUST wait for the user to confirm the list or provide modifications.
@@ -77,8 +78,8 @@ Based on the initial ingestion, analyze the project structure and refine the res
       ```markdown
       ### {Subsystem Name}
 
-      - [ ] {Subsystem Name} Какую бизнес-задачу решает? Внутренняя структура: классы, функции, модули и их взаимосвязи, поведение. Оформи таблицу, диаграммы?
-      - [ ] {Subsystem Name} Жизненный цикл, Конфигурация: параметры, переменные окружения, значения по умолчанию. Каналы взаимодействия, основные партнеры, выведи таблицы, диаграммы.
+      - [ ] {Subsystem Name}: What business problem does it solve? Internal structure: classes, functions, modules and their relationships, behavior. Format as tables, diagrams?
+      - [ ] {Subsystem Name}: Lifecycle, Configuration: parameters, environment variables, default values. Interaction channels, main partners, output tables, diagrams.
       ```
 
 12. **Dialogue: Core Features Selection (MANDATORY)**:

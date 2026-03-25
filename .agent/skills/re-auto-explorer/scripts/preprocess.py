@@ -169,7 +169,7 @@ def get_all_files(root_dir, exclude_patterns=None):
                 
     return safe_files, other_files
 
-def merge_files(files_to_merge, output_folder, chunk_count, base_name="merged_source"):
+def merge_files(files_to_merge, output_folder, chunk_count, base_name="merged_source", delete_original=True):
     if not files_to_merge:
         return []
     
@@ -199,18 +199,20 @@ def merge_files(files_to_merge, output_folder, chunk_count, base_name="merged_so
                 outfile.write("\n")
                 
         merged_files.append(str(merged_path.absolute()))
-        # Delete original files after merging
-        for fpath in chunk:
-            if fpath.exists():
-                try:
-                    fpath.unlink()
-                except Exception as e:
-                    # On Windows, files might be locked. Try to change mode and retry once.
+        
+        if delete_original:
+            # Delete original files after merging
+            for fpath in chunk:
+                if fpath.exists():
                     try:
-                        os.chmod(fpath, 0o777)
                         fpath.unlink()
-                    except:
-                        print(f"Warning: Could not delete {fpath}: {e}")
+                    except Exception as e:
+                        # On Windows, files might be locked. Try to change mode and retry once.
+                        try:
+                            os.chmod(fpath, 0o777)
+                            fpath.unlink()
+                        except:
+                            print(f"Warning: Could not delete {fpath}: {e}")
                 
     return merged_files
 
@@ -341,6 +343,7 @@ def main():
 
     elif args.command == "prep":
         is_clone = False
+        repo_dir = None
 
         if args.repo_url.startswith(("http://", "https://", "git@")):
             if Repo is None:
@@ -354,19 +357,54 @@ def main():
             try:
                 # Check if directory is empty before cloning
                 if any(target_dir.iterdir()):
-                    repo_path = str(target_dir.absolute())
+                    repo_dir = target_dir
                 else:
                     repo = Repo.clone_from(args.repo_url, target_dir)
                     repo.close()
-                    repo_path = str(target_dir.absolute())
+                    repo_dir = target_dir
                     is_clone = True
             except Exception as e:
                 print(json.dumps({"error": str(e)}) if args.json else f"Error cloning repo: {e}")
                 sys.exit(1)
         else:
-            repo_path = str(Path(args.repo_url).absolute())
+            source_path = Path(args.repo_url).absolute()
+            if not source_path.exists():
+                print(json.dumps({"error": f"Local path not found: {source_path}"}) if args.json else f"Error: Local path not found: {source_path}")
+                sys.exit(1)
+                
+            target_dir = Path(args.output_dir or tempfile.mkdtemp(prefix="bmad_re_local_"))
+            if not target_dir.exists():
+                target_dir.mkdir(parents=True)
+            
+            # If target is different from source, copy files to avoid mutating original
+            if target_dir.absolute() != source_path.absolute():
+                if not args.json: print(f"Working on a copy of {source_path} in {target_dir}...")
+                
+                # Simple ignore function for copying
+                def ignore_patterns(path, names):
+                    exclude = {'.git', 'node_modules', '__pycache__', '.venv', '.next', 'dist', 'build', '.DS_Store'}
+                    return [n for n in names if n in exclude]
+                
+                # Copy everything to target_dir
+                for item in source_path.iterdir():
+                    if item.name in {'.git', 'node_modules', '__pycache__', '.venv', '.next', 'dist', 'build', '.DS_Store'}:
+                        continue
+                    
+                    s = source_path / item.name
+                    d = target_dir / item.name
+                    if s.is_dir():
+                        shutil.copytree(s, d, dirs_exist_ok=True, ignore=ignore_patterns)
+                    else:
+                        shutil.copy2(s, d)
+                is_clone = True # We can safely mutate the copy
+            else:
+                # DANGER: working in-place. We should probably discourage this.
+                if not args.json: print("WARNING: Working in-place on original source! Original files may be renamed or deleted.")
+                is_clone = False
+            
+            repo_dir = target_dir
 
-        repo_dir = Path(repo_path)
+        repo_path = str(repo_dir.absolute())
 
         # 1. Get files
         safe_files, other_files = get_all_files(repo_dir)
@@ -382,18 +420,22 @@ def main():
             if available_slots <= 0:
                 # We must merge even safe files
                 all_files = safe_files + other_files
-                merged = merge_files(all_files, repo_dir, args.max_sources)
+                merged = merge_files(all_files, repo_dir, args.max_sources, delete_original=is_clone)
                 result_files = merged
                 artifacts.extend(merged)
             else:
-                merged = merge_files(other_files, repo_dir, available_slots)
+                merged = merge_files(other_files, repo_dir, available_slots, delete_original=is_clone)
                 result_files.extend(merged)
                 artifacts.extend(merged)
         else:
-            # Just rename others to .txt
+            # Just rename/copy others to .txt
             for fpath in other_files:
                 new_path = fpath.with_suffix(fpath.suffix + ".txt")
-                fpath.rename(new_path)
+                if is_clone:
+                    fpath.rename(new_path)
+                else:
+                    # If not a clone/copy, we create a copy alongside (still polluting, but not destructive)
+                    shutil.copy2(fpath, new_path)
                 result_files.append(str(new_path.absolute()))
                 artifacts.append(str(new_path.absolute()))
 
