@@ -100,30 +100,30 @@ bluep-js/
 
 ```mermaid
 flowchart TD
-    VM["Vm (Главный класс)"]
+    VM["Vm - Главный класс"]
 
     subgraph Core
-        VM --> Utils["Utils (клонирование, слияние классов)"]
-        VM --> Types["Base Types (описание типов для IDE)"]
+        VM --> Utils["Utils - клонирование, слияние классов"]
+        VM --> Types["Base Types - описание типов для IDE"]
     end
 
     subgraph Execution_Engine
-        VM --> Graph["Graph (Парсер и исполнитель)"]
-        Graph --> Context["Context (Изолированная память)"]
+        VM --> Graph["Graph - Парсер и исполнитель"]
+        Graph --> Context["Context - Изолированная память"]
     end
 
     subgraph Modules_System
         VM --> M_Abstract["AbstractModule"]
-        M_Abstract --> M_Core["Core Module (Базовые события)"]
-        M_Abstract --> M_Cron["Cron Module (Планировщик)"]
-        M_Abstract --> M_Actor["Actor Module (Менеджер акторов)"]
+        M_Abstract --> M_Core["Core Module - Базовые события"]
+        M_Abstract --> M_Cron["Cron Module - Планировщик"]
+        M_Abstract --> M_Actor["Actor Module - Менеджер акторов"]
     end
 
     subgraph Nodes_Library
         VM --> N_Abstract["AbstractNode"]
-        N_Abstract --> N_Base["Встроенные ноды (Array, Math, String...)"]
-        N_Abstract --> N_Control["Управление потоком (If, For, Call)"]
-        N_Abstract --> N_Actor["Узлы акторов (ActorGet, ActorMethod)"]
+        N_Abstract --> N_Base["Встроенные ноды - Array, Math, String"]
+        N_Abstract --> N_Control["Управление потоком - If, For, Call"]
+        N_Abstract --> N_Actor["Узлы акторов - ActorGet, ActorMethod"]
     end
 ```
 
@@ -303,39 +303,41 @@ sequenceDiagram
     G->>C: collect final graph outputs
     G-->>VM: getResult()
     G-->>App: final return values
+  
+  ```
 
 #### 3.7 Data Flow Diagram (DFD L1)
 
 ```mermaid
-flowchart TD
-    Inputs([Входящие параметры / События])
-    Outputs([Итоговый результат])
+  flowchart TD
+      Inputs([Входящие параметры / События])
+      Outputs([Итоговый результат])
 
-    VMCore("1. Vm.runLibraryFunction()")
-    GraphInit("2. Graph.execute()")
-    NodePrep("3. Node.prepareAndExecute()")
-    NodeExec("4. Node.execute()")
-    GraphRout("5. Маршрутизация (Graph while loop)")
+      VMCore("1. Vm.runLibraryFunction")
+      GraphInit("2. Graph.execute")
+      NodePrep("3. Node.prepareAndExecute")
+      NodeExec("4. Node.execute")
+      GraphRout("5. Маршрутизация - Graph while loop")
 
-    CtxInputs[(Context: Inputs & Variables)]
-    CtxOutputs[(Context: Node Outputs)]
+      CtxInputs["(Context: Inputs & Variables)"]
+      CtxOutputs["(Context: Node Outputs)"]
 
-    Inputs --> VMCore
-    VMCore -->|Структура графа| GraphInit
-    GraphInit -->|Инициализация начальных данных| CtxInputs
+      Inputs --> VMCore
+      VMCore -->|Структура графа| GraphInit
+      GraphInit -->|Инициализация начальных данных| CtxInputs
 
-    GraphInit -->|Запуск entry node| NodePrep
+      GraphInit -->|Запуск entry node| NodePrep
 
-    NodePrep -->|Запрос зависимостей (опережающее вычисление)| GraphRout        
-    NodePrep <-->|Чтение данных (getOutput)| CtxOutputs
-    CtxInputs -->|Чтение переменных| NodePrep
+      NodePrep -->|Запрос зависимостей| GraphRout
+      NodePrep <-->|Чтение данных getOutput| CtxOutputs
+      CtxInputs -->|Чтение переменных| NodePrep
 
-    NodePrep -->|Подготовленные Inputs| NodeExec
-    NodeExec -->|Запись промежуточных результатов| CtxOutputs
-    NodeExec -->|Возврат выходного слота (напр. 'return')| GraphRout
+      NodePrep -->|Подготовленные Inputs| NodeExec
+      NodeExec -->|Запись промежуточных результатов| CtxOutputs
+      NodeExec -->|Возврат выходного слота| GraphRout
 
-    GraphRout -->|Определение следующего Node ID| NodePrep
-    GraphRout -->|Если next = null, сбор выходов| Outputs
+      GraphRout -->|Определение следующего Node ID| NodePrep
+      GraphRout -->|Если next = null, сбор выходов| Outputs
 ```
 
 #### 3.8 State Machine Diagrams
@@ -641,30 +643,30 @@ classDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Device as Физическое устройство / Сокет
-    participant Actor as CustomActor (AbstractActor)
-    participant Mod as ActorModule
-    participant VM as Vm Engine
-    participant Graph as Graph (Blueprint)
+    participant Device
+    participant CustomActor
+    participant Mod
+    participant VM
+    participant Graph
 
-    Note over Actor, Mod: Инициализация
-    Actor->>Mod: addActor(myActor)
-    Mod->>Actor: actor.vm(VM)
-    Mod->>Actor: actor.on('tempChanged')
+    Note over CustomActor,Mod: Инициализация
+    CustomActor->>Mod: addActor myActor
+    Mod->>CustomActor: actor.vm VM
+    Mod->>CustomActor: actor.on tempChanged
 
-    Note over Device, Graph: Runtime: Реакция на внешнее событие
-    Device->>Actor: Изменение температуры (30°C)
-    Actor->>Actor: Обновление _state.temperature
-    Actor->>Actor: this.emit('tempChanged', {temp: 30})
-    Actor-->>Mod: Перехват события модулем
-    Mod->>VM: runLibraryFunction(fn, inputs)
+    Note over Device,Graph: Runtime - Реакция на внешнее событие
+    Device->>CustomActor: Изменение температуры 30C
+    CustomActor->>CustomActor: Обновление _state.temperature
+    CustomActor->>CustomActor: this.emit tempChanged {temp: 30}
+    CustomActor-->>Mod: Перехват события модулем
+    Mod->>VM: runLibraryFunction fn, inputs
 
-    Note over VM, Graph: Runtime: Выполнение графа
-    VM->>Graph: execute(inputs)
-    Note right of Graph: Узел: if (temp > 25) -> ActorMethod
-    Graph->>Actor: method('turnCoolerOn')
-    Actor->>Device: relayOn()
-    Actor-->>Graph: { success: true }
+    Note over VM,Graph: Runtime - Выполнение графа
+    VM->>Graph: execute inputs
+    Note right of Graph: Узел if temp > 25 -> ActorMethod
+    Graph->>CustomActor: method turnCoolerOn
+    CustomActor->>Device: relayOn
+    CustomActor-->>Graph: { success: true }
 ```
 
 ### 4.4 Nodes Library
