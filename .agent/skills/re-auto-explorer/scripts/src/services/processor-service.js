@@ -59,7 +59,7 @@ class ProcessorService {
 
     async createArtifacts(repoDir, safeFiles, otherFiles, maxSources, isClone, keep) {
         const totalCount = safeFiles.length + otherFiles.length;
-        const artifactDir = path.join(repoDir, ".re-ae");
+        const artifactDir = path.join(repoDir, ".tree");
         await fs.ensureDir(artifactDir);
 
         let resultFiles = [...safeFiles];

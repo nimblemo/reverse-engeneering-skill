@@ -36,7 +36,7 @@ program
 
             if (options.type === 'v2') {
                 const exePath = path.join(__dirname, '..', 'code-tree-rs.exe');
-                const treeDocsDir = path.join(repoDir, '.re-ae');
+                const treeDocsDir = path.join(repoDir, '.tree');
                 await fs.ensureDir(treeDocsDir);
                 
                 const cmd = `"${exePath}" -p "${repoDir}" -o "${treeDocsDir}"`;
@@ -65,8 +65,8 @@ program
                     return files;
                 };
                 
-                const insightFiles = await gatherFiles(path.join(repoDir, '.tree', 'cache', 'insights'));
-                const structFiles = await gatherFiles(path.join(repoDir, '.tree', 'cache', 'structure'));
+                const insightFiles = await gatherFiles(path.join(repoDir, '.tree','insights'));
+                const structFiles = await gatherFiles(path.join(repoDir, '.tree', 'structure'));
                 codeFiles = new Set([...insightFiles, ...structFiles]);
             } else {
                 const scanResult = await scannerService.scanAndCategorizeFiles(repoDir);
@@ -112,7 +112,7 @@ program
     .command('clean')
     .description('Clean artifacts or remove repo')
     .requiredOption('--target <path>', 'Target directory')
-    .option('--clean-artefacts', 'Clean .re-ae directory')
+    .option('--clean-artefacts', 'Clean .tree directory')
     .option('--remove-repo', 'Remove the entire repository directory')
     .option('--json', 'Output results in JSON format', false)
     .action(async (options) => {
@@ -149,7 +149,7 @@ program
     .command('upload')
     .description('Upload a directory of sources to a notebook')
     .argument('<nb_id>', 'Notebook ID')
-    .argument('<dir_path>', 'Directory path containing .re-ae')
+    .argument('<dir_path>', 'Directory path containing .tree')
     .option('--json', 'Output results in JSON format', false)
     .action(async (nbId, dirPath, options) => {
         if (options.json) logger.setJsonOutput(true);

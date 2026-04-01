@@ -22,7 +22,7 @@ describe('RepoService', () => {
         fs.remove.mockResolvedValue(undefined);
 
         const result = await repoService.cleanArtefacts(repoDir);
-        expect(fs.remove).toHaveBeenCalledWith(expect.stringContaining('.re-ae'));
+        expect(fs.remove).toHaveBeenCalledWith(expect.stringContaining('.tree'));
         expect(result).toBe(true);
     });
 

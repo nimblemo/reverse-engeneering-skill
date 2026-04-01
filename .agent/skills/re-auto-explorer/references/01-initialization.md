@@ -51,6 +51,6 @@
 
 5. **Create Notebook**: Run command `node scripts/preprocess.js create "RE: {project_name}"`. Note the `{nb_id}` from the output.
 
-6. **Import Sources**: Run command: `node scripts/preprocess.js upload {nb_id} {sources_dir}/.re-ae/`
+6. **Import Sources**: Run command: `node scripts/preprocess.js upload {nb_id} {sources_dir}/.tree/`
 
 7. **Progression**:  Once sources are ingested and report initialized, proceed to `./references/02-refinement.md`.

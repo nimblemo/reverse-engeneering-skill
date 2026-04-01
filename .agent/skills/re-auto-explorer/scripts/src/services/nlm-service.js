@@ -82,7 +82,7 @@ class NlmService {
 
     async addSourcesFromDir(notebookId, sourcesDir) {
         const sourcesPath = path.resolve(sourcesDir);
-        const artifactDir = path.join(sourcesPath, ".re-ae");
+        const artifactDir = path.join(sourcesPath, ".tree");
         
         if (!fs.existsSync(artifactDir)) {
             logger.error(`Artifact directory not found: ${artifactDir}`);
@@ -94,7 +94,7 @@ class NlmService {
             .map(f => path.join(artifactDir, f))
             .filter(f => fs.statSync(f).isFile());
 
-        logger.info(`Total files to upload from .re-ae: ${files.length}`);
+        logger.info(`Total files to upload from .tree: ${files.length}`);
         let successCount = 0;
 
         for (let i = 0; i < files.length; i++) {

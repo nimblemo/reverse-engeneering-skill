@@ -12,12 +12,12 @@ class RepoService {
     }
 
     async cleanArtefacts(repoDir) {
-        const artifactDir = path.join(repoDir, ".re-ae");
+        const artifactDir = path.join(repoDir, ".tree");
         
         if (await fs.pathExists(artifactDir)) {
             try {
                 await fs.remove(artifactDir);
-                logger.success("Artifact directory (.re-ae) cleanup complete.");
+                logger.success("Artifact directory (.tree) cleanup complete.");
                 return true;
             } catch (e) {
                 logger.error(`Error during cleanup: ${e.message}`);
