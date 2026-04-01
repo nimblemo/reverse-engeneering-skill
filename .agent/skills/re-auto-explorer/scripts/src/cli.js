@@ -35,11 +35,8 @@ program
             let textFiles = new Set();
 
             if (options.type === 'v2') {
-                const exePath = path.join(__dirname, '..', 'code-tree-rs.exe');
-                const treeDocsDir = path.join(repoDir, '.tree');
-                await fs.ensureDir(treeDocsDir);
-                
-                const cmd = `"${exePath}" -p "${repoDir}" -o "${treeDocsDir}"`;
+                const exePath = path.join(__dirname, '..', 'code-tree-rs.exe'); 
+                const cmd = `"${exePath}" -p "${repoDir}" -o "${repoDir}"`;
                 logger.info(`Running strategy v2: ${cmd}`);
                 
                 try {
@@ -66,7 +63,7 @@ program
                 };
                 
                 const insightFiles = await gatherFiles(path.join(repoDir, '.tree','insights'));
-                const structFiles = await gatherFiles(path.join(repoDir, '.tree', 'structure'));
+                const structFiles = await gatherFiles(path.join(repoDir, '.tree','structure'));
                 codeFiles = new Set([...insightFiles, ...structFiles]);
             } else {
                 const scanResult = await scannerService.scanAndCategorizeFiles(repoDir);
