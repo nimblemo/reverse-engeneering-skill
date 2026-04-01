@@ -1,61 +1,56 @@
 # 01-initialization
 
-## Prerequisites
-
-- `nlm` CLI is available.
-- `re_repo_url` is provided.
-- `re_project_name` is provided.
-- `re_output_folder` is provided.
-- `re_sources_folder` is provided.
-- `re_base_plan` is provided.
-- `re_max_sources` is provided.
-
 ## Actions
 
-1.  **Define Inputs**:
-    - `re_repo_url`: URL of the repository to reverse engineer.
-    - `re_project_name`: name of the project to reverse engineer.
-    - `communication_language`: Language for communication (default: English).
-    - `document_output_language`: Language for the output document (default: English).
-    - `re_output_folder`: Folder to store the output (default: `{project-root}/reports/{re_project_name}`).
-    - `re_sources_folder`: Folder to store the sources (default: `{project-root}/sources/{re_project_name}`).
-    - `re_base_plan`: Path to the base research plan (default: `{project-root}/research-plan.md`).
-    - `re_max_sources`: Maximum number of sources to import (default: 45).
+1. **Define Inputs (Sourced from `config.yaml`)**:
 
-2.  **Preprocessing**: Run `uv run --with gitpython scripts/preprocess.py` with arguments:
+- `{repo_url}`: URL of the repository to reverse engineer.
+- `{project_root}`: root directory of the project.
+- `{project_name}`: name of the project to reverse engineer.
+- `{base_plan}`: path to the base research plan file.
+- `{lang_com}`: language of the codebase.
+- `{lang_doc}`: language of the documentation.
+- `{max_sources}`: Maximum number of sources to import (default: 50).
+- `{chanking_type}`: Chanking type (default: 'v1').
 
-    ```bash
-        prep --repo_url {re_repo_url} --json --output_dir {re_sources_folder} --max_sources {re_max_sources}
-    ```
+2. **Validate**:
+**STOP EXECUTION (MANDATORY)**: Прочитай `config.yaml`, извлеки все переменные и выведи их список оператору. 
+Используй инструмент `AskUserQuestion`, чтобы представить список и дождаться подтверждения (кнопки "Confirm" / "Edit"). 
+**ЗАПРЕЩЕНО** переходить к следующему шагу без явного подтверждения от пользователя. `[ ]`
 
-3.  **Create Notebook**: Run command `uv run --with gitpython scripts/preprocess.py create "RE: {re_project_name}"`.
-    - Note the `nb_id` from the output. Save it in the `re-report.md` file.
+2. **Create plan**: Read content from `{base_plan}` and write it to the file on a `{lang_doc}` language in the directory `{project_root}/reports/{project_name}/exploration-plan.md`.
 
-4.  **Import Sources**: Run command:
-    `uv run --with gitpython scripts/preprocess.py upload {nb_id} {re_sources_folder}`
+3. **Establish Cache**: Create `{project_root}/reports/{project_name}/README.md` with the following structure and markdowwn content should be translated on `{lang_doc}` language (Exept YAML block):
 
-5.  **Establish Cache**: Create `{re_output_folder}/re-report.md` with the following structure:
+        ```markdown
+                
+                ```
+                status: "initialization"    #never translate this block
+                context:
+                project_name: "{project_name}"
+                repo_url: "{repo_url}"
+                nb_id: "{nb_id}"
+                output_dir: "{project_root}/reports/{project_name}"
+                sources_dir: "{project_root}/sources/{project_name}"
+                exploration_plan: "{project_root}/reports/{project_name}/exploration-plan.md"
+                report: "{project_root}/reports/{project_name}/README.md"
+                max_sources: "{max_sources}"
+                lang_com: "{lang_com}"
+                lang_doc: "{lang_doc}"
+                chanking_type: "{chanking_type}"
+                created: "{timestamp}"
+                        
+                ```
+                
+                # Reverse Engineering Report: {project_name} //should be translated on {lang_doc} language
 
-```yaml
----
-status: "initialization"
-context:
-  project_name: "{re_project_name}"
-  repo_url: "{re_repo_url}"
-  nb_id: "{nb_id}"
-  output_dir: "{re_output_folder}"
-  sources_dir: "{re_sources_folder}"
-  base_plan: "{re_base_plan}"
-  max_sources: "{re_max_sources}"
-  lang_comm: "{communication_language}"
-  lang_doc: "{document_output_language}"
-created: "{timestamp}"
----
-# Reverse Engineering Report: {re_project_name}
+                ### Step 1 Project overview // should be translated on {lang_doc} language
+        ```
 
-### Step 1 Project overview
-```
+4. **Preprocessing**: Run command: `node scripts/preprocess.js prep --keep --repo_url {repo_url} --json --output_dir {sources_dir} --max_sources {max_sources} --type {chanking_type}`
 
-## Progression
+5. **Create Notebook**: Run command `node scripts/preprocess.js create "RE: {project_name}"`. Note the `{nb_id}` from the output.
 
-Once sources are ingested and report initialized, proceed to `./references/02-refinement.md`.
+6. **Import Sources**: Run command: `node scripts/preprocess.js upload {nb_id} {sources_dir}/.re-ae/`
+
+7. **Progression**:  Once sources are ingested and report initialized, proceed to `./references/02-refinement.md`.

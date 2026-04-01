@@ -4,8 +4,8 @@ sources/**
 reports/**
 # Не игнорировать папки (иначе git не сможет найти внутри них нужные файлы)
 !reports/**/
-# Не игнорировать файлы re-report.md в любых вложенных папках внутри reports
-!reports/**/re-report.md
+# Не игнорировать файлы README.md в любых вложенных папках внутри reports
+!reports/**/README.md
 
 _bmad/**
 _templates/**
