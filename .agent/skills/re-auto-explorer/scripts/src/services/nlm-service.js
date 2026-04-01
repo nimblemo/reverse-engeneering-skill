@@ -81,8 +81,11 @@ class NlmService {
     }
 
     async addSourcesFromDir(notebookId, sourcesDir) {
-        const sourcesPath = path.resolve(sourcesDir);
-        const artifactDir = path.join(sourcesPath, ".tree");
+        let artifactDir = path.resolve(sourcesDir);
+        
+        if (path.basename(artifactDir) !== '.tree') {
+            artifactDir = path.join(artifactDir, '.tree');
+        }
         
         if (!fs.existsSync(artifactDir)) {
             logger.error(`Artifact directory not found: ${artifactDir}`);
