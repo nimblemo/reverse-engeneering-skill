@@ -9,3 +9,5 @@ reports/**
 
 _bmad/**
 _templates/**
+.exe
+node_modules/**
