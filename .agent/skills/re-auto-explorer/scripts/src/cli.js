@@ -80,7 +80,6 @@ program
                 options.keep
             );
 
-            await repoService.cleanupGit(repoDir);
 
             const result = {
                 repo_path: path.resolve(repoDir),
